@@ -1,5 +1,4 @@
 - add documentation to core files (src lua + C library)
-- buffer for smoother framerates
 - window property changes during runtime (name, width, height)
-- standard libraries (vector, ray, signals, ..., inputs..)
-- XY recenter
+- add services / core libraries (vector, ray, signals, ..., inputs..)
+- fly Y axis
