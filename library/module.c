@@ -98,41 +98,7 @@ int lua_getEventAsync(lua_State *L) {
     BYTE hasMessage = getEventAsync(&msg);
 
     if (hasMessage) {
-        lua_newtable(L);
-
-        lua_pushstring(L, "window_handle");
-        lua_pushlightuserdata(L, msg.hwnd);
-        lua_settable(L, -3);
-
-        lua_pushstring(L, "msgClass");
-        lua_pushstring(L, parseMSG(msg.message));
-        lua_settable(L, -3);
-
-        lua_pushstring(L, "msgId");
-        lua_pushinteger(L, msg.message);
-        lua_settable(L, -3);
-
-        lua_pushstring(L, "param_1");
-        lua_pushinteger(L, msg.wParam);
-        lua_settable(L, -3);
-
-        lua_pushstring(L, "param_2");
-        lua_pushinteger(L, msg.lParam);
-        lua_settable(L, -3);
-
-        lua_pushstring(L, "ms_time");
-        lua_pushinteger(L, msg.time);
-        lua_settable(L, -3);
-
-        lua_pushstring(L, "position");
-        lua_newtable(L);
-        lua_pushstring(L, "x");
-        lua_pushinteger(L, msg.pt.x);
-        lua_settable(L, -3);
-        lua_pushstring(L, "y");
-        lua_pushinteger(L, msg.pt.y);
-        lua_settable(L, -3);
-        lua_settable(L, -3);
+        lua_process_event(msg, L);
     } else {
         lua_pushnil(L);
     }
