@@ -12,7 +12,7 @@ local function init(name, width, height)
         pixels_wrt_cm = 37.795, --37 pixels = 1cm
 
         runFrame = function (fps)
-            local deltaTime = graphics.pWait(1/fps)
+            local deltaTime = graphics.wait(1/fps)
 
             --clear screen to redraw
             graphics.clearScreen()
