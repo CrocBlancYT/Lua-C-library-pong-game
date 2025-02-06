@@ -2,6 +2,8 @@ local init = dofile('./src/init.lua')
 local width, height = 1920/2, 1080/2
 
 local game = init('Pong', width, height)
+height = height - 50
+width = width - 25
 
 local targetFps = 120
 local actualFps = 120
@@ -55,27 +57,45 @@ local function react_collide(object, deltaTime, framesCalcOnVelChange)
     local pos, size, vel = object.position, object.size, object.velocity
 
     if pos.y+(size.y/2) > height then
-        vel.y = -vel.y * 0.8
+        vel.y = -math.abs(vel.y) * 0.7
         pos.y = pos.y + vel.y*deltaTime*framesCalcOnVelChange
+
+        vel.x = vel.x * 0.9
     end
 
     if pos.y-(size.y/2) < 0 then
-        vel.y = -vel.y
+        vel.y = math.abs(vel.y) * 0.7
         pos.y = pos.y + vel.y*deltaTime*framesCalcOnVelChange
+
+        vel.x = vel.x * 0.9
     end
 
     if pos.x+(size.x/2) > width then
-        vel.x = -vel.x
+        vel.x = -math.abs(vel.x) * 0.7
         pos.x = pos.x + vel.x*deltaTime*framesCalcOnVelChange
+
+        vel.x = vel.x * 0.9
     end
 
     if pos.x-(size.x/2) < 0 then
-        vel.x = -vel.x
+        vel.x = math.abs(vel.x) * 0.7
+
         pos.x = pos.x + vel.x*deltaTime*framesCalcOnVelChange
+
+        vel.x = vel.x * 0.9
     end
 end
 
+local hex_keycodes = dofile('./src/keycodes.lua')
+local keycodes = {}
+for i, v in pairs(hex_keycodes) do keycodes[tostring(tonumber(i))] = v end
+
 game.connectEvent(function ( event, deltaTime )
+    if (event.name == 'Unknown') then return end
+
+    if event.keycode then
+        print(keycodes[tostring(event.keycode)] or 'Unkown keycode') --event.is_held to determine start, change or end
+    end
 end)
 
 game.connectFrame(function ( deltaTime )
@@ -93,7 +113,7 @@ game.connectFrame(function ( deltaTime )
     size.x = start_size.x
     size.y = start_size.y
     
-    react_collide(projectile, deltaTime, 0.5)
+    react_collide(projectile, deltaTime, 0)
 
     position.x = position.x + (velocity.x*deltaTime)
     position.y = position.y + (velocity.y*deltaTime)
@@ -107,9 +127,10 @@ game.connectFrame(function ( deltaTime )
 
     velocity.x = velocity.x + air_res.x*deltaTime
     velocity.y = velocity.y + air_res.y*deltaTime
+
 end)
 
 while true do
     game.runFrame(120)
-    print(actualFps)
+    --print(actualFps)
 end
