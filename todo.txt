@@ -1,4 +1,0 @@
-- add documentation to core files (src lua + C library)
-- window property changes during runtime (name, width, height)
-- add services / core libraries (vector, ray, signals, ..., inputs..)
-- fly Y axis
