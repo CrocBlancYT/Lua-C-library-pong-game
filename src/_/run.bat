@@ -1,0 +1,2 @@
+lua _.lua
+pause
