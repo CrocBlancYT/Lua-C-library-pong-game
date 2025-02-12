@@ -107,10 +107,14 @@ local function setup(imports, game)
         inputChanged = signals.newEvent(),
         inputEnded = signals.newEvent(),
 
-        otherEvents = signals.newEvent(),
+        otherEvents = signals.newEvent(), --déplacer à "private" pour utilisation exterieur
 
-        isKeyDown = function (keycode)
+        isKeycodeDown = function (keycode)
             return keys[keycode] or false
+        end,
+
+        isKeyDown = function (key)
+            return keys[key_to_code[key]] or false
         end,
 
         parseKeycode = function (keycode)
@@ -118,7 +122,7 @@ local function setup(imports, game)
             return code_to_key[keycode]
         end,
 
-        keycode = key_to_code,
+        keycodes = key_to_code,
 
         mouse = mouse
     }

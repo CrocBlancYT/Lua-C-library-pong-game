@@ -1,8 +1,10 @@
 local graphics = assert(require('graphics'))
+local json = assert(dofile('json.lua'))
 
-local imports = {}
+local imports = { json=json }
+local game
 
-local function import(name, game)
+local function import(name)
     local setup, _private= dofile('./src/import/'..name..'.lua')
 
     if type(setup) == "table" then
@@ -27,7 +29,7 @@ local function init(name, width, height)
 
 
     --game imports
-    local game = { pixels_wrt_cm = 37.795, height=height, width=width }
+    game = { pixels_wrt_cm = 37.795, height=height, width=width }
 
     --data
     import('keycodes')
@@ -35,18 +37,21 @@ local function init(name, width, height)
     --core objects
     import('signals')
     import('vector2')
+    import('tags')
     import('color3')
 
     -- utils / events processing
-    local inputs = import('user_inputs', game)
-    import('run_service')
+    local inputs = import('user_inputs')
+    local run_settings = import('run_service')
     import('data_store')
+    import('pid')
+    import('rays')
 
     --objects interactions
     import('collisions')
     import('physics')
 
-    local interface = import('user_interface', game)
+    local interface = import('user_interface')
 
     local onHeartbeat = imports.run_service.onHeartbeat
     local onRender = imports.run_service.onRender
@@ -67,8 +72,13 @@ local function init(name, width, height)
     end)
     ]]
 
+    local fps = run_settings.defaultFps
+    function imports.run_service.setFps(newFps)
+        fps = newFps
+    end
+
     --game methods
-    function game.run(fps)
+    function game.run()
         local deltaTime = graphics.wait(1/fps)
 
         graphics.clearScreen() --clear screen to redraw

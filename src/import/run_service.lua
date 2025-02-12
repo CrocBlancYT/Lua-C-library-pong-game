@@ -6,6 +6,8 @@ local function setup(imports, game)
     return {
         onHeartbeat = signals.newEvent(),
         onRender = signals.newEvent()
+    }, {
+        defaultFps = 60
     }
 end
 

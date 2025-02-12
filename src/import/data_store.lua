@@ -1,20 +1,17 @@
 local data_store = {}
 
-local function toboolean(e)
-    if string.lower(e) == "true" then return true end
-    if string.lower(e) == "false" then return false end
-end
+local json
+local defaultPath = './data/'
 
 local function save(metadata, filename)
+    --table data get
     local content = metadata.data
 
-    local raw = ""
-    for i, v in pairs(content) do
-        local line = tostring(i) .. "=" .. (tonumber(v) or toboolean(v) or tostring(v))
-        raw = raw .. line .. "\n"
-    end
+    --json encoded (table -> string)
+    local raw = json.encode(content)
 
-    local h = io.open(filename, "w+")
+    --io set operation
+    local h = io.open(defaultPath .. filename, "w+")
     if not h then return end
     h:write(raw)
     h:close()
@@ -23,18 +20,19 @@ local function save(metadata, filename)
 end
 
 local function load(metadata, filename)
-    local h = io.open(filename, "r")
+    --io get operation
+    local h = io.open(defaultPath .. filename, "r")
     if not h then return end
     local raw = h:read("*a")
     h:close()
 
-    local content = {}
+    --json decoded(string -> table)
+    local new_data = json.decode(raw)
 
-    for i, v in pairs(string.gmatch(raw, "^(.-)=(.*)$")) do
-        content[i] = (tonumber(v) or toboolean(v) or tostring(v))
-    end
-
-    metadata.data = content
+    --table data set (clear + replace)
+    local old_data = metadata.data
+    for i, _ in pairs(old_data) do old_data[i] = nil end
+    for i, v in pairs(new_data) do old_data[i] = v end
     
     return true
 end
@@ -45,7 +43,9 @@ local function handle()
     return data, metadata
 end
 
-local function setup()
+local function setup(imports)
+    json = imports.json
+
     local public = {handle=handle}
     local private = {}
 

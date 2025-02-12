@@ -2,6 +2,12 @@ local gui = {
     frames = {}
 }
 
+local default = {
+    size = { x= 40, y=40 },
+    position = { x= 0, y=0 },
+    color = {r=255, g=255, b=255}
+}
+
 local signals
 local vector2
 local game
@@ -31,14 +37,19 @@ end
 
 function gui.newBox(position, size, color, clickable)
     local frame = {
-        position = position,
-        size = size,
-        color = color,
+        position = position
+            or vector2.new(default.position), --default
+
+        size = size
+            or vector2.new(default.size),  --default
+
+        color = color
+            or default.color,  --default
 
         rotation = 0,
 
         clickable = clickable,
-        shape='box'
+        shape = 'box'
     }
 
     frame.onMouseButton = signals.newEvent()

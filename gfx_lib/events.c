@@ -92,7 +92,7 @@ void lua_process_event(MSG msg, lua_State *L) {
 
         case WM_MOUSEWHEEL: return lua_mouseEvent("Mouse_Scroll", msg, L);
         case WM_MOUSEMOVE: return lua_mouseEvent("Mouse_Move", msg, L);
-        
+
         default: return lua_event_default("Unknown", msg, L);
     }
 }
