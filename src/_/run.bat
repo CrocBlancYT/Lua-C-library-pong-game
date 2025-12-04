@@ -1,2 +1,0 @@
-lua _.lua
-pause
