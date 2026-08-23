@@ -1,2 +1,2 @@
-lua main.lua
+lua54 main.lua
 pause
